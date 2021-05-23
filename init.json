@@ -1,0 +1,25 @@
+{
+	"InputDevice": {
+		"gamePad input device": "/dev/input/event0"
+	},
+	"GPIO interface": {
+		"Stop button": 18,
+		"Green LED": 15
+	},
+	"GPIO motors": {
+		"Motor 1 in1": 24,
+		"Motor 1 in2": 23,
+		"Motor 1 enable": 25,
+		"Motor 2 in1": 11,
+		"Motor 2 in2": 9,
+		"Motor 2 enable": 10
+	},
+	"GPIO ultrasound sensor": {
+		"Trigger": 20,
+		"Echo": 21
+	}
+}
+
+
+    
+     
