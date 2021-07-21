@@ -7,3 +7,6 @@ This file contains an altered version from tank.fzz, where I optimized it for my
 
 [tank_bb.png]
 This file shows the breadboard of tank.fzz, so you can see the breadboard design without fritzing.
+
+[Fixation_articulée_pour_HC-SR04.zip]
+Thingiverse file for 3d printing custom part
