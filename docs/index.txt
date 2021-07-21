@@ -1,3 +1,9 @@
 [tank.fzz]
-.fzz is a fritzing file. This file contains the breadboard schema drawing fot my tank project.
-you can download fritzing from https://fritzing.org/.
+This file contains the breadboard schema drawing fot my tank project.
+.fzz is a fritzing file. You can download fritzing from https://fritzing.org/.
+
+[tank_pcb.fzz]
+This file contains an altered version from tank.fzz, where I optimized it for my PCB. Some components are missing here as they are to be connected using jumper wires.
+
+[tank_bb.png]
+This file shows the breadboard of tank.fzz, so you can see the breadboard design without fritzing.
