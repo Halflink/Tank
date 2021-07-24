@@ -17,6 +17,10 @@
 	"GPIO ultrasound sensor": {
 		"Trigger": 20,
 		"Echo": 21
+	},
+	"Speed setup":{
+		"Cruise speed factor": 1,
+		"Turn speed factor": 0.25
 	}
 }
 

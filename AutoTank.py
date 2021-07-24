@@ -18,17 +18,18 @@ class AutoTank:
         GPIO = None
         GPIO_green_LED = None
         time = None
-        sleep_time = 0.5
+        sleep_time_on = 0.5
+        sleep_time_off = 0.5
         running = True
 
-        def __init__(self, GPIO, threading, time, GPIO_green_LED, name, thread_id):
+        def __init__(self, gpio, threading, time, gpio_green_led, name, thread_id):
             # set all variables
             self.threading = threading
-            self.GPIO = GPIO
+            self.GPIO = gpio
             self.time = time
 
             # Set GPIO pins
-            self.GPIO_green_LED = GPIO_green_LED
+            self.GPIO_green_LED = gpio_green_led
             self.GPIO.setup(self.GPIO_green_LED, self.GPIO.OUT)
 
             # initialize thread
@@ -54,17 +55,25 @@ class AutoTank:
             print("Starting " + self.name)
             while self.running:
                 self.GPIO.output(self.GPIO_green_LED, self.GPIO.HIGH)
-                self.time.sleep(self.sleep_time)
+                self.time.sleep(self.sleep_time_on)
                 self.GPIO.output(self.GPIO_green_LED, self.GPIO.LOW)
-                self.time.sleep(self.sleep_time)
-                print("sleep time = %.1f" % self.sleep_time)
+                self.time.sleep(self.sleep_time_off)
+                print("sleep time = %.1f" % self.sleep_time_on)
 
-        def set_blink_speed(self, dist):
-            self.set_sleep_time(self.calc_sleep_time(dist))
+        def set_blink_speed(self, on, off=None):
 
-        def set_sleep_time(self, sleep_time):
+            sleep_time_on = 0
+            sleep_time_off = 0
+            if off is None:
+                sleep_time_on = self.calc_sleep_time(on)
+                sleep_time_off = sleep_time_on
+            else:
+                sleep_time_on = on
+                sleep_time_off = off
+
             # set the time between LED on and LED off
-            self.sleep_time = sleep_time
+            self.sleep_time_on = sleep_time_on
+            self.sleep_time_off = sleep_time_off
 
         def terminate(self):
             # termination of the thread
@@ -74,7 +83,7 @@ class AutoTank:
 
         self.json_handler = self.JsonHandler()
 
-        # set GPIO pins to Boardcom SOC channel numbering (defines how you refer to the pins)
+        # set GPIO pins to Broadcom SOC channel numbering (defines how you refer to the pins)
         self.GPIO.setmode(self.GPIO.BCM)
 
         # set GPIO Pins
@@ -96,9 +105,11 @@ class AutoTank:
                                     , self.json_handler.GPIO_ena
                                     , self.json_handler.GPIO_in3
                                     , self.json_handler.GPIO_in4
-                                    , self.json_handler.GPIO_enb)
+                                    , self.json_handler.GPIO_enb
+                                    , self.json_handler.cruise_speed_factor
+                                    , self.json_handler.turn_speed_factor)
 
-        #set the lights
+        # set the lights
         self.thread_green_led = self.GreenLED(self.GPIO
                                               , self.threading
                                               , self.time
@@ -136,22 +147,45 @@ class AutoTank:
         return distance
 
     def find_way(self):
+        print("Finding way....")
+        self.thread_green_led.set_blink_speed(0.1, 0.1)
 
         # determine distance
         dist = self.distance()
 
-        while dist < 40:
+        # Back off from obstacle
+        while dist < 20:
             dist = self.distance()
+            print("Measured Distance = %.1f cm" % dist)
+            self.time.sleep(0.25)
             self.chassis.go_backward()
 
         self.chassis.stop()
+        current_dist = dist
+        turn_time = 0.25
+        turn_direction = "LEFT"
 
-        while dist < 60:
-            self.chassis.turn_left_axis()
-            self.time.sleep(1)
+        # turn and check if there is room.
+        # First try left, then try right, then left some more, etc.
+        while dist < 40:
+            if turn_direction == "LEFT":
+                self.chassis.turn_left_axis()
+                turn_direction = "RIGHT"
+            else:
+                self.chassis.turn_right_axis()
+                turn_direction = "LEFT"
+
+            turn_time = turn_time + 0.25
+            self.time.sleep(turn_time)
             self.chassis.stop()
             dist = self.distance()
-            self.time.sleep(0.5)
+            print("Measured Distance = %.1f cm" % dist)
+
+            if current_dist > dist:
+                self.chassis.turn_left_axis()
+                self.time.sleep(0.5)
+
+            self.time.sleep(0.25)
 
     def drive(self):
 

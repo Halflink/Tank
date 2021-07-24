@@ -13,9 +13,9 @@ class Chassis:
         duty_cycle_speed3 = 80
         duty_cycle_speed4 = 100
         # turn speed factor is used to hold a track in case of turing
-        turn_speed_factor = 0.25
+        turn_speed_factor = 0
         # cruise speed factor is used when the chassis is going straight (so no turning)
-        cruise_speed_factor = 1
+        cruise_speed_factor = 0
 
         # define gears
         current_gear = 0
@@ -27,7 +27,9 @@ class Chassis:
                      gpio,
                      gpio_motor_ina,
                      gpio_motor_inb,
-                     gpio_motor_en):
+                     gpio_motor_en,
+                     cruise_speed_factor,
+                     turn_seed_factor):
 
             self.GPIO = gpio
 
@@ -58,6 +60,10 @@ class Chassis:
             self.pwm = self.GPIO.PWM(self.gpio_motor_en,
                                      1000)
             self.pwm.start(self.duty_cycle_speed1)
+
+            # set speed factors
+            self.cruise_speed_factor = cruise_speed_factor
+            self.turn_speed_factor = turn_seed_factor
 
         # Get methods
         def get_duty_cycle_speed(self, gear):
@@ -153,7 +159,9 @@ class Chassis:
                  gpio_motor_ena,
                  gpio_motor_in3,
                  gpio_motor_in4,
-                 gpio_motor_enb):
+                 gpio_motor_enb,
+                 cruise_speed_factor,
+                 turn_speed_factor):
 
         # set GPIO
         self.GPIO = gpio
@@ -170,11 +178,15 @@ class Chassis:
         self.leftTrack = self.Track(self.GPIO,
                                     self.gpio_motor_in3,
                                     self.gpio_motor_in4,
-                                    self.gpio_motor_enb)
+                                    self.gpio_motor_enb,
+                                    cruise_speed_factor,
+                                    turn_speed_factor)
         self.rightTrack = self.Track(self.GPIO,
                                      self.gpio_motor_in1,
                                      self.gpio_motor_in2,
-                                     self.gpio_motor_ena)
+                                     self.gpio_motor_ena,
+                                     cruise_speed_factor,
+                                     turn_speed_factor)
 
         self.ACTION_FORWARD = "ACTION FORWARD"
         self.ACTION_BACKWARD = "ACTION BACKWARD"
@@ -269,8 +281,8 @@ class Chassis:
 
         self.currentAction = self.ACTION_LEFT_AXIS
 
-        self.leftTrack.set_gear(2)
-        self.rightTrack.set_gear(2)
+        self.leftTrack.set_gear(1)
+        self.rightTrack.set_gear(1)
         self.leftTrack.backward()
         self.rightTrack.forward()
 
@@ -292,8 +304,8 @@ class Chassis:
 
         self.currentAction = self.ACTION_RIGHT_AXIS
 
-        self.leftTrack.set_gear(2)
-        self.rightTrack.set_gear(2)
+        self.leftTrack.set_gear(1)
+        self.rightTrack.set_gear(1)
         self.leftTrack.forward()
         self.rightTrack.backward()
 

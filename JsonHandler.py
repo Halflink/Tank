@@ -20,6 +20,8 @@ class JsonHandler:
             self.GPIO_trigger = init_info['GPIO ultrasound sensor']['Trigger']
             self.GPIO_echo = init_info['GPIO ultrasound sensor']['Echo']
             self.GPIO_green_LED = init_info['GPIO interface']['Green LED']
+            self.cruise_speed_factor = init_info['Speed setup']['Cruise speed factor']
+            self.turn_speed_factor = init_info['Speed setup']['Turn speed factor']
 
     def print_settings(self):
         print("GamePadDevice: " + self.game_pad_input_device)
