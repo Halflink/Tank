@@ -11,16 +11,16 @@ class TankMain:
 
         # Event_code: the event.code defining the axis.
         # The value from the event is ranged between 0 and 65568 we need
-        # treshhold_max, treshhold_min and invert direction help translate that to -1, 0 and 1
+        # threshold_max, threshold_min and invert direction help translate that to -1, 0 and 1
 
         def __init__(self,
                      event_code,
-                     treshhold_max,
-                     treshhold_min,
+                     threshold_max,
+                     threshold_min,
                      invert_direction):
 
-            self.treshhold_max = treshhold_max
-            self.treshhold_min = treshhold_min
+            self.threshold_max = threshold_max
+            self.threshold_min = threshold_min
             self.event_code = event_code
             self.invert_direction = invert_direction
             self.current_value = 0
@@ -32,12 +32,12 @@ class TankMain:
             return self.event_code
 
         def get_direction(self, event):
-            if event.value > self.treshhold_max:
+            if event.value > self.threshold_max:
                 if self.invert_direction:
                     return -1
                 else:
                     return 1
-            elif event.value < self.treshhold_min:
+            elif event.value < self.threshold_min:
                 if self.invert_direction:
                     return 1
                 else:
@@ -49,13 +49,13 @@ class TankMain:
 
         # Event_code: the event.code defining the throttle.
         # The value from the event is ranged between 0 and 256
-        # treshhold_max helps translate that to 0 and 1
+        # threshold_max helps translate that to 0 and 1
 
         def __init__(self,
                      event_code,
-                     treshhold_max):
+                     threshold_max):
 
-            self.treshhold_max = treshhold_max
+            self.threshold_max = threshold_max
             self.event_code = event_code
 
         def compare(self, event):
@@ -65,7 +65,7 @@ class TankMain:
             return self.event_code
 
         def get_value(self, event):
-            if event.value > self.treshhold_max:
+            if event.value > self.threshold_max:
                 return 1
             else:
                 return 0
@@ -81,12 +81,12 @@ class TankMain:
 
         self.json_handler = self.JsonHandler()
 
-        # set GPIO pins to Boardcom SOC channel numbering (defines how you refer to the pins)
+        # set GPIO pins to Broadcom SOC channel numbering (defines how you refer to the pins)
         self.GPIO.setmode(self.GPIO.BCM)
         # GPIO 18 set up as input. It is pulled up to stop false signals
         self.GPIO.setup(self.json_handler.GPIO_stop_Button, self.GPIO.IN, pull_up_down=self.GPIO.PUD_UP)
 
-        # creates object 'gamepad' to store the data
+        # creates object 'game pad' to store the data
         self.game_pad = self.InputDevice(self.json_handler.game_pad_input_device)
 
         # EV_ABS event.code 0: x axis left joystick
@@ -106,13 +106,15 @@ class TankMain:
         self.time_to_sleep = 0.25
 
         # set the chassis
-        self.chassis = self.Chassis(self.GPIO
-                                    , self.json_handler.GPIO_in1
-                                    , self.json_handler.GPIO_in2
-                                    , self.json_handler.GPIO_ena
-                                    , self.json_handler.GPIO_in3
-                                    , self.json_handler.GPIO_in4
-                                    , self.json_handler.GPIO_enb)
+        self.chassis = self.Chassis(self.GPIO,
+                                    self.json_handler.GPIO_in1,
+                                    self.json_handler.GPIO_in2,
+                                    self.json_handler.GPIO_ena,
+                                    self.json_handler.GPIO_in3,
+                                    self.json_handler.GPIO_in4,
+                                    self.json_handler.GPIO_enb,
+                                    self.json_handler.cruise_speed_factor,
+                                    self.json_handler.turn_speed_factor)
 
     def stop_button_pressed(self, channel):
         print("Stop button pressed")
@@ -189,10 +191,10 @@ class TankMain:
 
     def run_tank(self):
 
-        self.GPIO.add_event_detect(self.json_handler.GPIO_stop_Button
-                                   , self.GPIO.FALLING
-                                   , callback=self.stop_button_pressed
-                                   , bouncetime=200)
+        self.GPIO.add_event_detect(self.json_handler.GPIO_stop_Button,
+                                   self.GPIO.FALLING,
+                                   callback=self.stop_button_pressed,
+                                   bouncetime=200)
         print("start")
 
         # evdev takes care of polling the controller in a loop

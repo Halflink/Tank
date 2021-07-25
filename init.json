@@ -20,7 +20,8 @@
 	},
 	"Speed setup":{
 		"Cruise speed factor": 1,
-		"Turn speed factor": 0.25
+		"Turn speed factor": 0.25,
+		"Auto cruise speed": 2
 	}
 }
 

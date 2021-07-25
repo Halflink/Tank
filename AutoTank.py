@@ -23,6 +23,7 @@ class AutoTank:
         running = True
 
         def __init__(self, gpio, threading, time, gpio_green_led, name, thread_id):
+
             # set all variables
             self.threading = threading
             self.GPIO = gpio
@@ -62,18 +63,12 @@ class AutoTank:
 
         def set_blink_speed(self, on, off=None):
 
-            sleep_time_on = 0
-            sleep_time_off = 0
             if off is None:
-                sleep_time_on = self.calc_sleep_time(on)
-                sleep_time_off = sleep_time_on
+                self.sleep_time_on = self.calc_sleep_time(on)
+                self.sleep_time_off = self.sleep_time_on
             else:
-                sleep_time_on = on
-                sleep_time_off = off
-
-            # set the time between LED on and LED off
-            self.sleep_time_on = sleep_time_on
-            self.sleep_time_off = sleep_time_off
+                self.sleep_time_on = on
+                self.sleep_time_off = off
 
         def terminate(self):
             # termination of the thread
@@ -99,23 +94,23 @@ class AutoTank:
         self.GPIO.setup(self.json_handler.GPIO_stop_Button, self.GPIO.IN, pull_up_down=self.GPIO.PUD_UP)
 
         # set the chassis
-        self.chassis = self.Chassis(self.GPIO
-                                    , self.json_handler.GPIO_in1
-                                    , self.json_handler.GPIO_in2
-                                    , self.json_handler.GPIO_ena
-                                    , self.json_handler.GPIO_in3
-                                    , self.json_handler.GPIO_in4
-                                    , self.json_handler.GPIO_enb
-                                    , self.json_handler.cruise_speed_factor
-                                    , self.json_handler.turn_speed_factor)
+        self.chassis = self.Chassis(self.GPIO,
+                                    self.json_handler.GPIO_in1,
+                                    self.json_handler.GPIO_in2,
+                                    self.json_handler.GPIO_ena,
+                                    self.json_handler.GPIO_in3,
+                                    self.json_handler.GPIO_in4,
+                                    self.json_handler.GPIO_enb,
+                                    self.json_handler.cruise_speed_factor,
+                                    self.json_handler.turn_speed_factor)
 
         # set the lights
-        self.thread_green_led = self.GreenLED(self.GPIO
-                                              , self.threading
-                                              , self.time
-                                              , self.GPIO_green_led
-                                              , "Thread-1"
-                                              , 1)
+        self.thread_green_led = self.GreenLED(self.GPIO,
+                                              self.threading,
+                                              self.time,
+                                              self.GPIO_green_led,
+                                              "Thread-1",
+                                              1)
 
     def distance(self):
 
@@ -210,11 +205,11 @@ class AutoTank:
     def run_tank_on_auto(self):
 
         try:
-            self.chassis.set_gear(2)
-            self.GPIO.add_event_detect(self.json_handler.GPIO_stop_Button
-                                       , self.GPIO.FALLING
-                                       , callback=self.stop_button_pressed
-                                       , bouncetime=200)
+            self.chassis.set_gear(self.json_handler.auto_cruise_speed)
+            self.GPIO.add_event_detect(self.json_handler.GPIO_stop_Button,
+                                       self.GPIO.FALLING,
+                                       callback=self.stop_button_pressed,
+                                       bouncetime=200)
 
             print("start")
             self.thread_green_led.start()
@@ -224,10 +219,10 @@ class AutoTank:
             print("Measurement stopped by User")
 
         finally:
-            print("Stopping programm")
+            print("Stopping program")
             self.thread_green_led.terminate()
             while self.thread_green_led.is_alive():
-                 niks = 0
+                self.time.sleep(0.1)
             print("Ended threads")
             self.GPIO.cleanup()
 

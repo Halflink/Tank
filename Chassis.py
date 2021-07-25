@@ -38,7 +38,7 @@ class Chassis:
             self.gpio_motor_inb = gpio_motor_inb
             self.gpio_motor_en = gpio_motor_en
 
-            # set GPIO pins to Boardcom SOC channel numbering (defines how you refer to the pins)
+            # set GPIO pins to Broadcom SOC channel numbering (defines how you refer to the pins)
             # is done by other class. self.GPIO.setmode(self.GPIO.BCM)
 
             # set up the PINS A motor needs three. "in A", "in B" and "ENable".
@@ -308,4 +308,3 @@ class Chassis:
         self.rightTrack.set_gear(1)
         self.leftTrack.forward()
         self.rightTrack.backward()
-

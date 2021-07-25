@@ -22,6 +22,7 @@ class JsonHandler:
             self.GPIO_green_LED = init_info['GPIO interface']['Green LED']
             self.cruise_speed_factor = init_info['Speed setup']['Cruise speed factor']
             self.turn_speed_factor = init_info['Speed setup']['Turn speed factor']
+            self.auto_cruise_speed = init_info['Speed setup']['Auto cruise speed']
 
     def print_settings(self):
         print("GamePadDevice: " + self.game_pad_input_device)
@@ -35,9 +36,11 @@ class JsonHandler:
         print("Ultrasound trigger: " + str(self.GPIO_trigger))
         print("Ultrasound echo: " + str(self.GPIO_echo))
         print("Green led: " + str(self.GPIO_green_LED))
+        print("Cruise speed factor: " + str(self.cruise_speed_factor))
+        print("Turn speed factor: " + str(self.turn_speed_factor))
+        print("Auto cruise speed: " + str(self.auto_cruise_speed))
 
 
 if __name__ == '__main__':
     jsonHandler = JsonHandler()
     jsonHandler.print_settings()
-
