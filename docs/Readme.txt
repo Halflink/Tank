@@ -7,10 +7,10 @@ Project type:	Raspberry Pi
 
 [PROJECT DESCRIPTION]
 I started this project to see what you could do with a Pi. The goal is to create a 
-tracked robot which can roam around autonomiously. 
+tracked robot which can roam around automatically.
 Currently there are two operating modes:
 1) roaming using ultrasone sensor, by starting AutoTank.py
-2) remote contrul using Xbox controller, by starting Main.py
+2) remote control using Xbox controller, by starting ManualTank.py
 I chose the Devastator chassis as it came with the DC motors and it looks neat. 
 
 
