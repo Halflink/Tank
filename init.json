@@ -3,20 +3,20 @@
 		"gamePad input device": "/dev/input/event0"
 	},
 	"GPIO interface": {
-		"Stop button": 18,
-		"Green LED": 15
+		"Stop button": 4,
+		"Green LED": 3
 	},
 	"GPIO motors": {
-		"Motor 1 in1": 24,
-		"Motor 1 in2": 23,
+		"Motor 1 in1": 23,
+		"Motor 1 in2": 24,
 		"Motor 1 enable": 25,
-		"Motor 2 in1": 11,
-		"Motor 2 in2": 9,
+		"Motor 2 in1": 9,
+		"Motor 2 in2": 11,
 		"Motor 2 enable": 10
 	},
 	"GPIO ultrasound sensor": {
-		"Trigger": 20,
-		"Echo": 21
+		"Trigger": 19,
+		"Echo": 26
 	},
 	"Speed setup":{
 		"Cruise speed factor": 1,
