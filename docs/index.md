@@ -1,6 +1,6 @@
 #Index
 
-##Design documents
+## Design documents
 **Fixation_articulée_pour_HC-SR04.zip**  
 Thingiverse file for 3d printing custom part
 
@@ -15,7 +15,7 @@ This file shows the breadboard of tank.fzz, so you can see the breadboard design
 **tank_pcb.fzz**  
 This file contains an altered version from tank.fzz, where I optimized it for my PCB. Some components are missing here as they are to be connected using jumper wires.
 
-##progress photos
+## progress photos
 **custom head.jpg**  
 This is the PCB I had made on which to connect all components.  
 Left you see one without the components, right with the components soldered on.
